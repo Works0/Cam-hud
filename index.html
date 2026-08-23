@@ -5,27 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COREX//SYNC Control Panel</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; user-select: none; }
-        body { background-color: #121416; display: flex; justify-content: center; align-items: flex-end; height: 100vh; overflow: hidden; padding-bottom: 12px; }
-        .toolbar { display: flex; width: 92%; max-width: 420px; height: 48px; background: #1a1d20; border: 1px solid #2c2f33; border-radius: 6px; padding: 5px; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-        .btn { flex: 1; background: linear-gradient(to bottom, #222629, #16191c); border: 1px solid #33383d; border-radius: 4px; color: #e0e0e0; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .btn:hover { background: linear-gradient(to bottom, #2a2f34, #1b1e22); border-color: #4a4e53; color: #ffffff; }
-        .btn:active { background: #111315; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            user-select: none;
+        }
+        body {
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            padding-bottom: 10px;
+        }
+        .container {
+            width: 94%;
+            max-width: 460px;
+            background: #f0f2f5;
+            border: 1px solid #d0d4dc;
+            border-radius: 4px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        /* Top Chevron Tabs */
+        .tabs {
+            display: flex;
+            height: 38px;
+            background: #1a1d20;
+        }
+        .tab {
+            flex: 1;
+            position: relative;
+            background: #222629;
+            color: #8c939d;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-right: 1px solid #121416;
+            transition: background 0.2s, color 0.2s;
+        }
+        .tab:hover {
+            background: #2c3238;
+            color: #ffffff;
+        }
+        .tab.active {
+            background: #ff6600;
+            color: #ffffff;
+        }
+        /* Sub-Panel Content Area underneath */
+        .panel {
+            display: none;
+            padding: 14px 10px;
+            background: #ffffff;
+            min-height: 70px;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .panel.active {
+            display: flex;
+        }
+        .sub-btn {
+            background: #f5f6f8;
+            border: 1px solid #ccd1dc;
+            border-radius: 3px;
+            padding: 6px 10px;
+            font-size: 9px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .sub-btn:hover {
+            background: #e4e8f0;
+            border-color: #ff6600;
+            color: #ff6600;
+        }
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <div class="btn" onclick="triggerAction('Target Mode')">Target</div>
-        <div class="btn" onclick="triggerAction('Studio Quiet')">Quiet</div>
-        <div class="btn" onclick="triggerAction('Camera Orbit')">Orbit</div>
-        <div class="btn" onclick="triggerAction('Cinematic Zoom')">Zoom</div>
+
+    <div class="container">
+        <!-- Top Navigation Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0, 'Target Mode')">Target</div>
+            <div class="tab" onclick="switchTab(1, 'Studio Quiet')">Quiet</div>
+            <div class="tab" onclick="switchTab(2, 'Camera Orbit')">Orbit</div>
+            <div class="tab" onclick="switchTab(3, 'Cinematic Zoom')">Zoom</div>
+        </div>
+
+        <!-- Sub-Panels Displayed Underneath -->
+        <div class="panel active" id="panel-0">
+            <button class="sub-btn" onclick="triggerAction('Target Mode')">Scan / Lock Target</button>
+            <button class="sub-btn" onclick="triggerAction('Reset Target')">Reset to Self</button>
+        </div>
+        <div class="panel" id="panel-1">
+            <button class="sub-btn" onclick="triggerAction('Toggle Tags')">Toggle Tags</button>
+            <button class="sub-btn" onclick="triggerAction('Toggle Chat')">Toggle Chat Mute</button>
+        </div>
+        <div class="panel" id="panel-2">
+            <button class="sub-btn" onclick="triggerAction('Pause/Resume Orbit')">Pause / Resume</button>
+            <button class="sub-btn" onclick="triggerAction('Recenter View')">Recenter View</button>
+        </div>
+        <div class="panel" id="panel-3">
+            <button class="sub-btn" onclick="triggerAction('Cinematic Zoom')">Toggle Zoom In</button>
+            <button class="sub-btn" onclick="triggerAction('Reset Zoom')">Reset Zoom</button>
+        </div>
     </div>
+
     <script>
+        function switchTab(index, actionName) {
+            // Switch active tab styling
+            var tabs = document.querySelectorAll('.tab');
+            tabs.forEach(function(tab, i) {
+                if(i === index) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+
+            // Switch active panel underneath
+            var panels = document.querySelectorAll('.panel');
+            panels.forEach(function(panel, i) {
+                if(i === index) panel.classList.add('active');
+                else panel.classList.remove('active');
+            });
+
+            triggerAction(actionName);
+        }
+
         function triggerAction(actionName) {
-            // This triggers an internal event that bypasses browser navigation URL tooltips
             var img = new Image();
             img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
         }
     </script>
+
 </body>
 </html>
