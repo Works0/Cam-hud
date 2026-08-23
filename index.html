@@ -96,10 +96,10 @@
     <div class="container">
         <!-- Top Navigation Tabs -->
         <div class="tabs">
-            <div class="tab active" onclick="switchTab(0, 'Target Mode')">Target</div>
-            <div class="tab" onclick="switchTab(1, 'Studio Quiet')">Quiet</div>
-            <div class="tab" onclick="switchTab(2, 'Camera Orbit')">Orbit</div>
-            <div class="tab" onclick="switchTab(3, 'Cinematic Zoom')">Zoom</div>
+            <div class="tab active" onclick="switchTab(0)">Target</div>
+            <div class="tab" onclick="switchTab(1)">Quiet</div>
+            <div class="tab" onclick="switchTab(2)">Orbit</div>
+            <div class="tab" onclick="switchTab(3)">Zoom</div>
         </div>
 
         <!-- Sub-Panels Displayed Underneath -->
@@ -108,11 +108,11 @@
             <button class="sub-btn" onclick="triggerAction('Reset Target')">Reset to Self</button>
         </div>
         <div class="panel" id="panel-1">
-            <button class="sub-btn" onclick="triggerAction('Toggle Tags')">Toggle Tags</button>
-            <button class="sub-btn" onclick="triggerAction('Toggle Chat')">Toggle Chat Mute</button>
+            <button class="sub-btn" onclick="triggerAction('Hide Tags')">Hide Tags</button>
+            <button class="sub-btn" onclick="triggerAction('Mute Chat')">Mute Chat</button>
         </div>
         <div class="panel" id="panel-2">
-            <button class="sub-btn" onclick="triggerAction('Pause/Resume Orbit')">Pause / Resume</button>
+            <button class="sub-btn" onclick="triggerAction('Camera Orbit')">Pause / Resume</button>
             <button class="sub-btn" onclick="triggerAction('Recenter View')">Recenter View</button>
         </div>
         <div class="panel" id="panel-3">
@@ -122,22 +122,18 @@
     </div>
 
     <script>
-        function switchTab(index, actionName) {
-            // Switch active tab styling
+        function switchTab(index) {
             var tabs = document.querySelectorAll('.tab');
             tabs.forEach(function(tab, i) {
                 if(i === index) tab.classList.add('active');
                 else tab.classList.remove('active');
             });
 
-            // Switch active panel underneath
             var panels = document.querySelectorAll('.panel');
             panels.forEach(function(panel, i) {
                 if(i === index) panel.classList.add('active');
                 else panel.classList.remove('active');
             });
-
-            triggerAction(actionName);
         }
 
         function triggerAction(actionName) {
