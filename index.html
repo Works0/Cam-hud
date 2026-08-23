@@ -24,7 +24,7 @@
         }
         .container {
             width: 94%;
-            max-width: 460px;
+            max-width: 480px;
             background: #f0f2f5;
             border: 1px solid #d0d4dc;
             border-radius: 4px;
@@ -41,7 +41,7 @@
             position: relative;
             background: #222629;
             color: #8c939d;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: bold;
             text-transform: uppercase;
             display: flex;
@@ -61,11 +61,13 @@
         }
         .panel {
             display: none;
-            padding: 14px 10px;
+            padding: 10px 8px;
             background: #ffffff;
-            min-height: 70px;
+            min-height: 75px;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         .panel.active {
             display: flex !important;
@@ -74,8 +76,8 @@
             background: #f5f6f8;
             border: 1px solid #ccd1dc;
             border-radius: 3px;
-            padding: 6px 10px;
-            font-size: 9px;
+            padding: 5px 7px;
+            font-size: 7.5px;
             font-weight: bold;
             color: #333;
             cursor: pointer;
@@ -96,26 +98,71 @@
         <div class="tabs">
             <div class="tab active" onclick="switchTab(0)">Target</div>
             <div class="tab" onclick="switchTab(1)">Quiet</div>
-            <div class="tab" onclick="switchTab(2)">Orbit</div>
-            <div class="tab" onclick="switchTab(3)">Zoom</div>
+            <div class="tab" onclick="switchTab(2)">Zoom</div>
+            <div class="tab" onclick="switchTab(3)">Angles</div>
+            <div class="tab" onclick="switchTab(4)">Orbits 1</div>
+            <div class="tab" onclick="switchTab(5)">Orbits 2</div>
         </div>
 
-        <!-- Sub-Panels -->
+        <!-- Panel 0: Target -->
         <div class="panel active" id="panel-0">
             <button class="sub-btn" onclick="triggerAction('Target Mode')">Scan / Lock Target</button>
-            <button class="sub-btn" onclick="triggerAction('Reset Target')">Reset to Self</button>
+            <button class="sub-btn" onclick="triggerAction('Reset to Self')">Reset to Self</button>
+            <button class="sub-btn" onclick="triggerAction('Recenter View')">Recenter View</button>
+            <button class="sub-btn" onclick="triggerAction('RESET ALL')">Reset All</button>
         </div>
+
+        <!-- Panel 1: Quiet -->
         <div class="panel" id="panel-1">
             <button class="sub-btn" onclick="triggerAction('Hide Tags')">Hide Tags</button>
+            <button class="sub-btn" onclick="triggerAction('Show Tags')">Show Tags</button>
             <button class="sub-btn" onclick="triggerAction('Mute Chat')">Mute Chat</button>
+            <button class="sub-btn" onclick="triggerAction('Restore Chat')">Restore Chat</button>
         </div>
+
+        <!-- Panel 2: Zoom -->
         <div class="panel" id="panel-2">
-            <button class="sub-btn" onclick="triggerAction('Camera Orbit')">Start / Pause Orbit</button>
-            <button class="sub-btn" onclick="triggerAction('Recenter View')">Recenter View</button>
-        </div>
-        <div class="panel" id="panel-3">
-            <button class="sub-btn" onclick="triggerAction('Cinematic Zoom')">Toggle Zoom In</button>
+            <button class="sub-btn" onclick="triggerAction('Slow Zoom In')">Zoom In 1</button>
+            <button class="sub-btn" onclick="triggerAction('Slow Zoom Out')">Zoom Out 1</button>
+            <button class="sub-btn" onclick="triggerAction('Zoom 2 In')">Zoom In 2</button>
+            <button class="sub-btn" onclick="triggerAction('Zoom 2 Out')">Zoom Out 2</button>
             <button class="sub-btn" onclick="triggerAction('Reset Zoom')">Reset Zoom</button>
+        </div>
+
+        <!-- Panel 3: Shot Angles -->
+        <div class="panel" id="panel-3">
+            <button class="sub-btn" onclick="triggerAction('Standard View')">Standard</button>
+            <button class="sub-btn" onclick="triggerAction('Editorial Low')">Ed. Low</button>
+            <button class="sub-btn" onclick="triggerAction('Left Low')">Left Low</button>
+            <button class="sub-btn" onclick="triggerAction('Right Low')">Right Low</button>
+            <button class="sub-btn" onclick="triggerAction('Editorial Front')">Ed. Front</button>
+            <button class="sub-btn" onclick="triggerAction('Portrait 2')">Portrait 2</button>
+            <button class="sub-btn" onclick="triggerAction('Eye Level')">Eye Level</button>
+            <button class="sub-btn" onclick="triggerAction('Play Tour')">Play Tour</button>
+        </div>
+
+        <!-- Panel 4: Orbits Page 1 -->
+        <div class="panel" id="panel-4">
+            <button class="sub-btn" onclick="triggerAction('Orbit')">Orbit</button>
+            <button class="sub-btn" onclick="triggerAction('Zoom Out')">Zoom Out</button>
+            <button class="sub-btn" onclick="triggerAction('Crane')">Crane</button>
+            <button class="sub-btn" onclick="triggerAction('Vertical Arc')">Vertical Arc</button>
+            <button class="sub-btn" onclick="triggerAction('Zolly')">Zolly</button>
+            <button class="sub-btn" onclick="triggerAction('Close Zolly')">Close Zolly</button>
+            <button class="sub-btn" onclick="triggerAction('Pause')">Pause / Resume</button>
+        </div>
+
+        <!-- Panel 5: Orbits Page 2 -->
+        <div class="panel" id="panel-5">
+            <button class="sub-btn" onclick="triggerAction('Close Orbit')">Close Orbit</button>
+            <button class="sub-btn" onclick="triggerAction('Figure 8-1')">Figure 8-1</button>
+            <button class="sub-btn" onclick="triggerAction('Figure 8-2')">Figure 8-2</button>
+            <button class="sub-btn" onclick="triggerAction('Helix')">Helix</button>
+            <button class="sub-btn" onclick="triggerAction('Dutch Sweep')">Dutch Sweep</button>
+            <button class="sub-btn" onclick="triggerAction('Dutch Tilt')">Dutch Tilt</button>
+            <button class="sub-btn" onclick="triggerAction('Spiral 1')">Spiral 1</button>
+            <button class="sub-btn" onclick="triggerAction('Spiral 2')">Spiral 2</button>
+            <button class="sub-btn" onclick="triggerAction('Parallax')">Parallax</button>
         </div>
     </div>
 
@@ -140,7 +187,6 @@
         }
 
         function triggerAction(actionName) {
-            // Sends the command through a hidden image request that LSL intercepts securely
             var img = new Image();
             img.src = "secondlife:///app/agent/00000000-0000-0000-0000-000000000000/im?message=" + encodeURIComponent(actionName);
         }
