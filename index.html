@@ -70,7 +70,7 @@
             justify-content: space-around;
         }
         .panel.active {
-            display: flex;
+            display: flex !important;
         }
         .sub-btn {
             background: #f5f6f8;
@@ -131,8 +131,13 @@
 
             var panels = document.querySelectorAll('.panel');
             panels.forEach(function(panel, i) {
-                if(i === index) panel.classList.add('active');
-                else panel.classList.remove('active');
+                if(i === index) {
+                    panel.classList.add('active');
+                    panel.style.display = 'flex';
+                } else {
+                    panel.classList.remove('active');
+                    panel.style.display = 'none';
+                }
             });
         }
 
