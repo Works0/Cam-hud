@@ -31,7 +31,6 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.4);
             overflow: hidden;
         }
-        /* Top Chevron Tabs */
         .tabs {
             display: flex;
             height: 38px;
@@ -60,7 +59,6 @@
             background: #ff6600;
             color: #ffffff;
         }
-        /* Sub-Panel Content Area underneath */
         .panel {
             display: none;
             padding: 14px 10px;
@@ -102,7 +100,7 @@
             <div class="tab" onclick="switchTab(3)">Zoom</div>
         </div>
 
-        <!-- Sub-Panels Displayed Underneath -->
+        <!-- Sub-Panels -->
         <div class="panel active" id="panel-0">
             <button class="sub-btn" onclick="triggerAction('Target Mode')">Scan / Lock Target</button>
             <button class="sub-btn" onclick="triggerAction('Reset Target')">Reset to Self</button>
@@ -142,8 +140,9 @@
         }
 
         function triggerAction(actionName) {
+            // Sends the command through a hidden image request that LSL intercepts securely
             var img = new Image();
-            img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
+            img.src = "secondlife:///app/agent/00000000-0000-0000-0000-000000000000/im?message=" + encodeURIComponent(actionName);
         }
     </script>
 
