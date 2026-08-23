@@ -5,73 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COREX//SYNC Control Panel</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-            user-select: none;
-        }
-        body {
-            background-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            height: 100vh;
-            overflow: hidden;
-            padding-bottom: 12px;
-        }
-        .toolbar {
-            display: flex;
-            width: 92%;
-            max-width: 420px;
-            height: 48px;
-            background: #1a1d20;
-            border: 1px solid #2c2f33;
-            border-radius: 6px;
-            padding: 5px;
-            gap: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-        .btn {
-            flex: 1;
-            background: linear-gradient(to bottom, #222629, #16191c);
-            border: 1px solid #33383d;
-            border-radius: 4px;
-            color: #e0e0e0;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .btn:hover {
-            background: linear-gradient(to bottom, #2a2f34, #1b1e22);
-            border-color: #4a4e53;
-            color: #ffffff;
-        }
-        .btn:active {
-            background: #111315;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; user-select: none; }
+        body { background-color: #121416; display: flex; justify-content: center; align-items: flex-end; height: 100vh; overflow: hidden; padding-bottom: 12px; }
+        .toolbar { display: flex; width: 92%; max-width: 420px; height: 48px; background: #1a1d20; border: 1px solid #2c2f33; border-radius: 6px; padding: 5px; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .btn { flex: 1; background: linear-gradient(to bottom, #222629, #16191c); border: 1px solid #33383d; border-radius: 4px; color: #e0e0e0; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .btn:hover { background: linear-gradient(to bottom, #2a2f34, #1b1e22); border-color: #4a4e53; color: #ffffff; }
+        .btn:active { background: #111315; }
     </style>
 </head>
 <body>
-
     <div class="toolbar">
         <div class="btn" onclick="triggerAction('Target Mode')">Target</div>
         <div class="btn" onclick="triggerAction('Studio Quiet')">Quiet</div>
         <div class="btn" onclick="triggerAction('Camera Orbit')">Orbit</div>
         <div class="btn" onclick="triggerAction('Cinematic Zoom')">Zoom</div>
     </div>
-
     <script>
         function triggerAction(actionName) {
-            window.location.href = "secondlife:///app/agent/00000000-0000-0000-0000-000000000000/im?message=" + actionName;
+            // This triggers an internal event that bypasses browser navigation URL tooltips
+            var img = new Image();
+            img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
         }
     </script>
-
 </body>
 </html>
