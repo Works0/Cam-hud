@@ -187,7 +187,11 @@
         }
 
         function triggerAction(actionName) {
-            window.location.href = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
+            var a = document.createElement('a');
+            a.href = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         }
     </script>
 
