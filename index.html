@@ -167,6 +167,9 @@
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const lslServerURL = urlParams.get('server');
+
         function switchTab(index) {
             var tabs = document.querySelectorAll('.tab');
             tabs.forEach(function(tab, i) {
@@ -187,14 +190,12 @@
         }
 
         function triggerAction(actionName) {
-            var iframe = document.getElementById('sl-bridge');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'sl-bridge';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
+            if (lslServerURL) {
+                fetch(lslServerURL, {
+                    method: 'POST',
+                    body: actionName
+                }).catch(err => console.log(err));
             }
-            iframe.src = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
         }
     </script>
 
