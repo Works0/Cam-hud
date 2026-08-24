@@ -187,8 +187,8 @@
         }
 
         function triggerAction(actionName) {
-            // Uses the standard local protocol route that native SL media panels intercept
-            window.location.href = "http://secondlife.local/action?" + encodeURIComponent(actionName);
+            var img = new Image();
+            img.src = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
         }
     </script>
 
