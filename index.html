@@ -167,6 +167,10 @@
     </div>
 
     <script>
+        // Automatically grab the live server URL passed via URL parameters from the LSL script
+        const urlParams = new URLSearchParams(window.location.search);
+        const lslServerURL = urlParams.get('server');
+
         function switchTab(index) {
             var tabs = document.querySelectorAll('.tab');
             tabs.forEach(function(tab, i) {
@@ -187,9 +191,12 @@
         }
 
         function triggerAction(actionName) {
-            // Sends a secure local request to the prim without opening web pages or throwing SLurl errors
-            var img = new Image();
-            img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
+            if (lslServerURL) {
+                fetch(lslServerURL, {
+                    method: 'POST',
+                    body: actionName
+                }).catch(err => console.log(err));
+            }
         }
     </script>
 
