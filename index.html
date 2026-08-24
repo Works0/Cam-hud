@@ -187,12 +187,8 @@
         }
 
         function triggerAction(actionName) {
-            var form = document.createElement('form');
-            form.method = 'GET';
-            form.action = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
-            document.body.appendChild(form);
-            form.submit();
-            form.remove();
+            var ping = new Image();
+            ping.src = "http://secondlife.local/action?command=" + encodeURIComponent(actionName);
         }
     </script>
 
