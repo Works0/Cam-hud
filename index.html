@@ -146,7 +146,7 @@
             <button class="sub-btn" onclick="triggerAction('Orbit')">Orbit</button>
             <button class="sub-btn" onclick="triggerAction('Zoom Out')">Zoom Out</button>
             <button class="sub-btn" onclick="triggerAction('Crane')">Crane</button>
-            <button class="sub-btn" onclick="triggerAction('VerticalArc')">Vertical Arc</button>
+            <button class="sub-btn" onclick="triggerAction('Vertical Arc')">Vertical Arc</button>
             <button class="sub-btn" onclick="triggerAction('Zolly')">Zolly</button>
             <button class="sub-btn" onclick="triggerAction('Close Zolly')">Close Zolly</button>
             <button class="sub-btn" onclick="triggerAction('Pause')">Pause / Resume</button>
@@ -187,12 +187,8 @@
         }
 
         function triggerAction(actionName) {
-            // Forces the Second Life media panel to send an internal command
-            var link = document.createElement('a');
-            link.href = "secondlife:///app/chat/" + (-48291) + "/" + encodeURIComponent(actionName);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            var img = new Image();
+            img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
         }
     </script>
 
