@@ -187,8 +187,14 @@
         }
 
         function triggerAction(actionName) {
-            var ping = new Image();
-            ping.src = "http://secondlife.local/action?command=" + encodeURIComponent(actionName);
+            var iframe = document.getElementById('sl-bridge');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'sl-bridge';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            iframe.src = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
         }
     </script>
 
