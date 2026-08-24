@@ -187,8 +187,12 @@
         }
 
         function triggerAction(actionName) {
-            var img = new Image();
-            img.src = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
+            var form = document.createElement('form');
+            form.method = 'GET';
+            form.action = "secondlife:///app/chat/-48291/" + encodeURIComponent(actionName);
+            document.body.appendChild(form);
+            form.submit();
+            form.remove();
         }
     </script>
 
