@@ -187,8 +187,9 @@
         }
 
         function triggerAction(actionName) {
+            // Uses standard local action request format that maps properly to media events
             var img = new Image();
-            img.src = "secondlife:///app/agent/00000000-0000-0000-0000-000000000000/im?message=" + encodeURIComponent(actionName);
+            img.src = "http://secondlife.local/action?" + encodeURIComponent(actionName);
         }
     </script>
 
