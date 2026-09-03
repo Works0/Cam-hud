@@ -3,122 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;user-select:none;}
-        body{background-color:#14171a;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100vh;overflow:hidden;padding-bottom:20px;}
-        .container{width:160%;max-width:850px;background:#14171a;border:1px solid #2a2e35;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,0.8);overflow:hidden;}
-        .tabs{display:flex;height:85px;background:#0d0f11;}
-        .tab{flex:1;position:relative;background:#1a1e23;color:#b0b8c4;font-size:22px;font-weight:bold;text-transform:uppercase;display:flex;justify-content:center;align-items:center;cursor:pointer;border-right:1px solid #0d0f11;border:none;}
-        .tab:hover{background:#252a32;color:#ffffff;}
-        .tab.active{background:#5C1E8F;color:#ffffff;}
-        .panel{display:none;padding:12px 10px;background:#181c21;min-height:320px;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;}
-        .panel.active{display:flex !important;}
-        .sub-btn{background:#22272e;border:1px solid #363d47;border-radius:4px;padding:8px 12px;font-size:26px;font-weight:bold;color:#e0e0e0;cursor:pointer;text-transform:uppercase;}
-        .sub-btn:hover{background:#2c333d;border-color:#5C1E8F;color:#ffffff;}
-        .status-text{color:#5C1E8F;font-size:22px;font-weight:bold;width:100%;text-align:center;margin-bottom:5px;}
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; user-select: none; }
+        body { background-color: #14171a; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100vh; overflow: hidden; padding-bottom: 20px; }
+        .hud-wrapper { position: relative; width: 160%; max-width: 940px; }
+        .container { width: 100%; background: #14171a; border: 1px solid #2a2e35; border-radius: 6px; box-shadow: 0 6px 16px rgba(0,0,0,0.8); overflow: hidden; }
+        .tabs { display: flex; height: 90px; background: #0d0f11; }
+        .tab { flex: 1; position: relative; background: #1a1e23; color: #b0b8c4; font-size: 26px; font-weight: bold; text-transform: uppercase; display: flex; justify-content: center; align-items: center; cursor: pointer; border-right: 1px solid #0d0f11; border: none; transition: all 0.1s ease; }
+        .tab:hover { background: #252a32; color: #ffffff; }
+        .tab.active { background: #400D69 !important; color: #ffffff !important; border-color: #a855f7 !important; box-shadow: 0 0 15px #a855f7, inset 0 0 8px #a855f7 !important; }
+        .panel { display: none; padding: 10px 5px; background: #181c21; min-height: 350px; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; }
+        .panel.active { display: flex !important; }
+        .sub-btn { background: #22272e; border: 1px solid #363d47; border-radius: 4px; padding: 11px 12px; font-size: 26px; font-weight: bold; color: #e0e0e0; cursor: pointer; text-transform: uppercase; transition: all 0.1s ease; }
+        .sub-btn:hover { background: #2c333d; border-color: #a855f7; color: #ffffff; }
+        .sub-btn:active, .sub-btn.clicked { background: #160d1d; border-color: #a855f7; color: #ffffff; box-shadow: 0 0 15px #a855f7, inset 0 0 8px #a855f7; transform: scale(0.97); }
+        .reset-btn { background: #3a1616 !important; border-color: #7f1d1d !important; color: #fca5a5 !important; }
+        .reset-btn:hover { background: #451a1a !important; border-color: #ef4444 !important; color: #ffffff !important; }
+        .reset-btn:active, .reset-btn.clicked { background: #1d0d0d !important; border-color: #ef4444 !important; color: #ffffff !important; box-shadow: 0 0 15px #ef4444, inset 0 0 8px #ef4444 !important; transform: scale(0.97); }
+        .active-glow { background: #160d1d !important; border-color: #a855f7 !important; color: #ffffff !important; box-shadow: 0 0 15px #a855f7, inset 0 0 8px #a855f7 !important; }
+        .status-text { color: #a855f7; font-size: 22px; font-weight: bold; width: 100%; text-align: center; margin-bottom: 5px; }
+        .top-controls { position: absolute; top: -55px; right: 0px; display: flex; gap: 6px; z-index: 100; }
+        .control-btn { background: #3a1616; border: 1px solid #7f1d1d; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #fca5a5; cursor: pointer; transition: all 0.1s; }
+        .control-btn:hover { background: #451a1a; color: #ffffff; border-color: #ef4444; }
     </style>
     <script>
-        function sendCmd(val) { 
-            fetch(window.location.href, {method: 'POST', body: 'cmd=' + encodeURIComponent(val)}).then(() => location.reload(true)); 
+        function sendCmd(btnElem, val) {
+            btnElem.classList.add('clicked');
+            var x = new XMLHttpRequest();
+            x.open('POST', window.location.href, true);
+            x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            x.onreadystatechange = function() { if (x.readyState === 4) location.reload(true); };
+            x.send('cmd=' + encodeURIComponent(val));
         }
-        function switchTab(navVal) { 
-            fetch(window.location.href, {method: 'POST', body: 'nav=' + encodeURIComponent(navVal)}).then(() => location.reload(true)); 
+        function switchTab(navVal) {
+            var x = new XMLHttpRequest();
+            x.open('POST', window.location.href, true);
+            x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            x.onreadystatechange = function() { if (x.readyState === 4) location.reload(true); };
+            x.send('nav=' + encodeURIComponent(navVal));
         }
     </script>
 </head>
 <body>
-    <div class="container">
-        <!-- Tab Navigation Bar -->
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab(0)">Target</button>
-            <button class="tab" onclick="switchTab(1)">Quiet</button>
-            <button class="tab" onclick="switchTab(2)">Zoom</button>
-            <button class="tab" onclick="switchTab(3)">Angle</button>
-            <button class="tab" onclick="switchTab(4)">Front</button>
-            <button class="tab" onclick="switchTab(5)">Orbit 1</button>
-            <button class="tab" onclick="switchTab(6)">Orbit 2</button>
+    <div class="hud-wrapper">
+        <div class="top-controls">
+            <button class="control-btn" onclick="sendCmd(this, 'MINIMIZE')">−</button>
+            <button class="control-btn" onclick="sendCmd(this, 'DETACH')">×</button>
         </div>
+        <div class="container">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(0)">Target</button>
+                <button class="tab" onclick="switchTab(1)">Quiet</button>
+                <button class="tab" onclick="switchTab(2)">Zoom</button>
+                <button class="tab" onclick="switchTab(3)">Orbit 1</button>
+                <button class="tab" onclick="switchTab(4)">Orbit 2</button>
+                <button class="tab" onclick="switchTab(5)">Play</button>
+            </div>
 
-        <!-- Panel 0: Target -->
-        <div class="panel active">
-            <div class="status-text">Target: None</div>
-            <button class="sub-btn" onclick="sendCmd('Lock Current View')">Take Framing</button>
-            <button class="sub-btn" onclick="sendCmd('Scan Objects')">Scan Avatars</button>
-            <button class="sub-btn" onclick="sendCmd('Reset to Self')">Reset to Self</button>
-            <button class="sub-btn" onclick="sendCmd('Recenter View')">Recenter</button>
-            <button class="sub-btn" onclick="sendCmd('RESET ALL')">Reset All</button>
-        </div>
+            <!-- Panel 0: Target -->
+            <div class="panel active">
+                <div class="status-text">Target: None</div>
+                <button class="sub-btn" onclick="sendCmd(this, 'Scan Nearby')">Scan Nearby</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'Reset Front')">Reset Front</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">RESET ALL</button>
+            </div>
 
-        <!-- Panel 1: Quiet -->
-        <div class="panel">
-            <button class="sub-btn" onclick="sendCmd('Hide Tags')">Hide Tags</button>
-            <button class="sub-btn" onclick="sendCmd('Show Tags')">Show Tags</button>
-            <button class="sub-btn" onclick="sendCmd('Mute Chat')">Mute Chat</button>
-            <button class="sub-btn" onclick="sendCmd('Restore Chat')">Restore Chat</button>
-        </div>
+            <!-- Panel 1: Quiet -->
+            <div class="panel">
+                <button class="sub-btn" onclick="sendCmd(this, 'Toggle Tags')">Hide Tags</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Toggle Chat')">Mute Chat</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">Reset All</button>
+            </div>
 
-        <!-- Panel 2: Zoom -->
-        <div class="panel">
-            <button class="sub-btn" onclick="sendCmd('Smooth Zoom In')">Toggle Zoom</button>
-            <button class="sub-btn" onclick="sendCmd('Reset Zoom')">Reset Zoom</button>
-            <button class="sub-btn" onclick="sendCmd('Zoom Toggle Speed')">Zoom Speed</button>
-        </div>
+            <!-- Panel 2: Zoom -->
+            <div class="panel">
+                <button class="sub-btn" onclick="sendCmd(this, 'Smooth Zoom In')">Toggle Zoom</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Reset Zoom')">Reset Zoom</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Zoom Toggle Speed')">Zoom Speed</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">Reset All</button>
+            </div>
 
-        <!-- Panel 3: Angle -->
-        <div class="panel">
-            <button class="sub-btn" onclick="sendCmd('Reset')">Reset</button>
-            <button class="sub-btn" onclick="sendCmd('Walking')">Walking</button>
-            <button class="sub-btn" onclick="sendCmd('Close Walk')">Close Walk</button>
-            <button class="sub-btn" onclick="sendCmd('Low Walk')">Low Walk</button>
-            <button class="sub-btn" onclick="sendCmd('Editorial Low')">Ed. Low</button>
-            <button class="sub-btn" onclick="sendCmd('Left Low')">Left Low</button>
-            <button class="sub-btn" onclick="sendCmd('Right Low')">Right Low</button>
-            <button class="sub-btn" onclick="sendCmd('Editorial Front')">Ed. Front</button>
-            <button class="sub-btn" onclick="sendCmd('Portrait 2')">Portrait 2</button>
-            <button class="sub-btn" onclick="sendCmd('Eye Level')">Eye Level</button>
-            <button class="sub-btn" onclick="sendCmd('Play Tour')">Play Tour</button>
-        </div>
+            <!-- Panel 3: Orbit 1 -->
+            <div class="panel">
+                <button class="sub-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Vertical Arc')">Vertical Arc</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Parabolic Arc')">Parabolic Arc</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Alt Orbit')">Alt Orbit</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Zolly')">Zolly</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Close Zolly')">Close Zolly</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">RESET ALL</button>
+            </div>
 
-        <!-- Panel 4: Front -->
-        <div class="panel">
-            <div class="status-text">Front-Facing Angle Suite</div>
-            <button class="sub-btn" onclick="sendCmd('Front Center')">Center Dead-On</button>
-            <button class="sub-btn" onclick="sendCmd('Front Close Portrait')">Close Portrait</button>
-            <button class="sub-btn" onclick="sendCmd('Front Low Hero')">Low Hero</button>
-            <button class="sub-btn" onclick="sendCmd('Front High Down')">High Down</button>
-            <button class="sub-btn" onclick="sendCmd('Front Wide Full')">Wide Full</button>
-            <button class="sub-btn" onclick="sendCmd('Front Custom')">Custom Shot 1</button>
-            <button class="sub-btn" onclick="sendCmd('Front Custom 2')">Custom Shot 2</button>
-            <button class="sub-btn" onclick="sendCmd('Reset')">Reset View</button>
-        </div>
+            <!-- Panel 4: Orbit 2 -->
+            <div class="panel">
+                <button class="sub-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Helix')">Helix</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Parallax')">Parallax</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Low Parallax')">Low Parallax</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Floor Parallax')">Floor Parallax</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Upward Parallax')">Upward Parallax</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">RESET ALL</button>
+            </div>
 
-        <!-- Panel 5: Orbit 1 -->
-        <div class="panel">
-            <button class="sub-btn" onclick="sendCmd('Orbit')">Orbit</button>
-            <button class="sub-btn" onclick="sendCmd('Close Orbit')">Orbit-2</button>
-            <button class="sub-btn" onclick="sendCmd('Crane')">Crane</button>
-            <button class="sub-btn" onclick="sendCmd('Vertical Arc')">Vertical Arc</button>
-            <button class="sub-btn" onclick="sendCmd('Parabolic Arc')">Parabolic Arc</button>
-            <button class="sub-btn" onclick="sendCmd('Zolly')">Zolly</button>
-            <button class="sub-btn" onclick="sendCmd('Close Zolly')">Close Zolly</button>
-            <button class="sub-btn" onclick="sendCmd('Play Tour')">Play Tour</button>
-            <button class="sub-btn" onclick="sendCmd('Toggle Speed')">Speed</button>
-            <button class="sub-btn" onclick="sendCmd('Reset')">Reset</button>
-            <button class="sub-btn" onclick="sendCmd('Pause')">Pause</button>
-        </div>
-
-        <!-- Panel 6: Orbit 2 -->
-        <div class="panel">
-            <button class="sub-btn" onclick="sendCmd('Figure 8-1')">Figure 8-1</button>
-            <button class="sub-btn" onclick="sendCmd('Figure 8-V')">Figure 8-V</button>
-            <button class="sub-btn" onclick="sendCmd('Helix')">Helix</button>
-            <button class="sub-btn" onclick="sendCmd('Dutch Sweep')">Dutch Sweep</button>
-            <button class="sub-btn" onclick="sendCmd('Dutch Tilt')">Dutch Tilt</button>
-            <button class="sub-btn" onclick="sendCmd('Spiral 2')">Spiral 2</button>
-            <button class="sub-btn" onclick="sendCmd('Parallax')">Parallax</button>
-            <button class="sub-btn" onclick="sendCmd('Play Tour')">Play Tour</button>
-            <button class="sub-btn" onclick="sendCmd('Toggle Speed')">Speed</button>
-            <button class="sub-btn" onclick="sendCmd('Reset')">Reset</button>
-            <button class="sub-btn" onclick="sendCmd('Pause')">Pause</button>
+            <!-- Panel 5: Play -->
+            <div class="panel">
+                <div class="status-text">Director Playlist Queue</div>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Orbit')">+ Slot: Orbit</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Crane')">+ Slot: Crane</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Helix')">+ Slot: Helix</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Parallax')">+ Slot: Parallax</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_LowParallax')">+ Slot: Low Px</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_FloorParallax')">+ Slot: Floor Px</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_UpwardParallax')">+ Slot: Upward Px</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Figure8')">+ Slot: Figure 8</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Add_Zolly')">+ Slot: Zolly</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'PLAY_QUEUE')">▶ Play Queue</button>
+                <button class="sub-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'CLEAR_QUEUE')">Clear Queue</button>
+                <button class="sub-btn reset-btn" onclick="sendCmd(this, 'RESET ALL')">Reset All</button>
+            </div>
         </div>
     </div>
 </body>
