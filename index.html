@@ -8,7 +8,6 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; user-select: none; }
         
-        /* Transparent body and html so SL prim texture shows through */
         html, body { background: transparent !important; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100vh; overflow: hidden; padding-bottom: 20px; }
         
         .wrapper { width: 160%; max-width: 940px; position: relative; animation: colorWave 84s infinite ease-in-out; }
@@ -21,9 +20,6 @@
         .tabs { display: flex; height: 90px; background: rgba(10, 6, 16, 0.8); padding: 6px; gap: 14px; border-radius: 7px 7px 0 0; }
         .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
         .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
-        
-        /* Shaded / Locked Tab Styling */
-        .tab.shaded { background: #110816 !important; color: #524266 !important; opacity: 0.5; cursor: not-allowed; }
         
         .panel { display: none; padding: 12px 5px; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
         .panel.active { display: flex; }
@@ -46,8 +42,6 @@
         
         .ctrl-group { display: flex; gap: 6px; }
         .ctrl { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; }
-        
-        .demo-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); font-size: 160px; font-weight: 900; color: rgba(255, 20, 147, 0.15); pointer-events: none; z-index: 5; white-space: nowrap; text-transform: uppercase; text-shadow: 0 0 25px rgba(255, 20, 147, 0.2); letter-spacing: 8px; line-height: 1; }
     </style>
 
     <script>
@@ -57,9 +51,11 @@
 
         function sendToSL(data) {
             if (!sl_url) return;
-            // GET Image Beacon bypasses CORS browser blocks securely
+            let cleanUrl = sl_url;
+            if (!cleanUrl.endsWith('/')) { cleanUrl += '/'; }
+            
             var beacon = new Image();
-            beacon.src = sl_url + '?' + data + '&t=' + Date.now();
+            beacon.src = cleanUrl + '?' + data + '&t=' + Date.now();
         }
 
         window.onload = function() {
@@ -95,6 +91,12 @@
                 if (t.indexOf('1') > -1) s = 2; else if (t.indexOf('2') > -1) s = 3; else if (t.indexOf('3') > -1) s = 4;
                 document.querySelectorAll('.speed-btn').forEach(e => e.innerText = 'SPEED ' + s);
             } 
+            else if (cmd === 'Toggle Tags') {
+                b.innerText = (b.innerText.toUpperCase() === 'HIDE TAGS') ? 'SHOW TAGS' : 'HIDE TAGS';
+            } 
+            else if (cmd === 'Toggle Chat') {
+                b.innerText = (b.innerText.toUpperCase() === 'MUTE CHAT') ? 'RESTORE CHAT' : 'MUTE CHAT';
+            } 
             else if (b.classList.contains('orbit-btn')) {
                 document.querySelectorAll('.orbit-btn.active').forEach(e => e.classList.remove('active'));
                 b.classList.add('active');
@@ -105,12 +107,6 @@
         }
 
         function setTab(idx) {
-            // Block clicks on shaded/locked demo tabs (Target:0, Quiet:1, Zoom:2, Orbit 2:4, Play:5)
-            var shadedTabs = [0, 1, 2, 4, 5];
-            if (shadedTabs.includes(idx)) {
-                return; 
-            }
-
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById('t' + idx).classList.add('active');
@@ -122,7 +118,7 @@
 <body>
     <div class="wrapper">
         <div class="top-bar">
-            <div class="logo">COREX<span>//</span>SYNC <span>[DEMO]</span></div>
+            <div class="logo">COREX<span>//</span>SYNC</div>
             <div class="ctrl-group">
                 <button class="ctrl" onclick="sendCmd(this, 'MINIMIZE')">−</button>
                 <button class="ctrl" style="color:#ff1493;" onclick="sendCmd(this, 'DETACH')">×</button>
@@ -131,20 +127,18 @@
         
         <div class="container-border">
             <div class="container">
-                <div class="demo-watermark">DEMO VERSION</div>
-                
                 <div class="tabs">
-                    <button id="t0" class="tab shaded" onclick="setTab(0)">Target</button>
-                    <button id="t1" class="tab shaded" onclick="setTab(1)">Quiet</button>
-                    <button id="t2" class="tab shaded" onclick="setTab(2)">Zoom</button>
-                    <button id="t3" class="tab active" onclick="setTab(3)">Orbit 1</button>
-                    <button id="t4" class="tab shaded" onclick="setTab(4)">Orbit 2</button>
-                    <button id="t5" class="tab shaded" onclick="setTab(5)">Play</button>
+                    <button id="t0" class="tab active" onclick="setTab(0)">Target</button>
+                    <button id="t1" class="tab" onclick="setTab(1)">Quiet</button>
+                    <button id="t2" class="tab" onclick="setTab(2)">Zoom</button>
+                    <button id="t3" class="tab" onclick="setTab(3)">Orbit 1</button>
+                    <button id="t4" class="tab" onclick="setTab(4)">Orbit 2</button>
+                    <button id="t5" class="tab" onclick="setTab(5)">Play</button>
                     <button id="t6" class="tab" onclick="setTab(6)">Glide</button>
                 </div>
 
-                <!-- TARGET PANEL (Shaded/Locked) -->
-                <div id="p0" class="panel">
+                <!-- TARGET PANEL -->
+                <div id="p0" class="panel active">
                     <div id="target-display" class="title">Target: None</div>
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Scan Nearby')">Scan Nearby</button>
@@ -154,7 +148,7 @@
                     </div>
                 </div>
 
-                <!-- QUIET PANEL (Shaded/Locked) -->
+                <!-- QUIET PANEL -->
                 <div id="p1" class="panel">
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Toggle Tags')">Hide Tags</button>
@@ -163,7 +157,7 @@
                     </div>
                 </div>
 
-                <!-- ZOOM PANEL (Shaded/Locked) -->
+                <!-- ZOOM PANEL -->
                 <div id="p2" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Smooth Zoom In')">Toggle Zoom</button>
@@ -172,8 +166,8 @@
                     </div>
                 </div>
 
-                <!-- ORBIT 1 PANEL (UNLOCKED / ACTIVE BY DEFAULT) -->
-                <div id="p3" class="panel active">
+                <!-- ORBIT 1 PANEL -->
+                <div id="p3" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
@@ -188,7 +182,7 @@
                     </div>
                 </div>
 
-                <!-- ORBIT 2 PANEL (Shaded/Locked) -->
+                <!-- ORBIT 2 PANEL -->
                 <div id="p4" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
@@ -203,7 +197,7 @@
                     </div>
                 </div>
 
-                <!-- PLAYLIST PANEL (Shaded/Locked) -->
+                <!-- PLAYLIST PANEL -->
                 <div id="p5" class="panel">
                     <div class="title">Director Playlist Queue</div>
                     <div class="button-grid">
@@ -227,7 +221,7 @@
                     </div>
                 </div>
 
-                <!-- GLIDE PANEL (UNLOCKED) -->
+                <!-- GLIDE PANEL -->
                 <div id="p6" class="panel">
                     <div class="title">Multi-Point Waypoints</div>
                     <div class="button-grid">
