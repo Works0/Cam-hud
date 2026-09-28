@@ -10,17 +10,17 @@
         
         html, body { background: #0b0712 !important; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* LOCKED WIDTH: Forces the HUD to stay wide on every tab, stopping the horizontal shrinking */
-        .wrapper { width: 940px; position: relative; margin-top: 50px; animation: colorWave 84s infinite ease-in-out; }
+        /* Locked Width */
+        .wrapper { width: 940px; position: relative; margin-top: 60px; animation: colorWave 84s infinite ease-in-out; }
         @keyframes colorWave { 0%, 23.8% { filter: hue-rotate(0deg); } 33.33%, 57.14% { filter: hue-rotate(-30deg); } 66.66%, 90.47% { filter: hue-rotate(-85deg); } 100% { filter: hue-rotate(0deg); } }
         .wrapper.paused { animation-play-state: paused !important; }
         
         .container-border { background: rgba(255, 20, 147, 0.35); padding: 3px; border-radius: 10px; box-shadow: 0 0 25px rgba(255, 20, 147, 0.4), 0 0 50px rgba(179, 0, 89, 0.2); }
         
-        /* Locked container dimensions so background image never resizes */
+        /* Fixed height + "cover" keeps the image perfectly proportioned without squishing */
         .container { 
             background-image: url('lens1.jpg');
-            background-size: 100% 100%;
+            background-size: cover; /* Restored to cover so the aspect ratio stays perfect */
             background-position: center;
             background-repeat: no-repeat;
             background-color: rgba(17, 11, 26, 0.85); 
