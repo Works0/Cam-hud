@@ -8,10 +8,8 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; user-select: none; }
         
-        /* Clean vertical center setup */
         html, body { background: #0b0712 !important; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* Margin-top pushes the ENTIRE wrapper (logo, borders, and container) down together */
         .wrapper { width: 160%; max-width: 940px; position: relative; margin-top: 60px; animation: colorWave 84s infinite ease-in-out; }
         @keyframes colorWave { 0%, 23.8% { filter: hue-rotate(0deg); } 33.33%, 57.14% { filter: hue-rotate(-30deg); } 66.66%, 90.47% { filter: hue-rotate(-85deg); } 100% { filter: hue-rotate(0deg); } }
         .wrapper.paused { animation-play-state: paused !important; }
@@ -19,7 +17,7 @@
         .container-border { background: rgba(255, 20, 147, 0.35); padding: 3px; border-radius: 10px; box-shadow: 0 0 25px rgba(255, 20, 147, 0.4), 0 0 50px rgba(179, 0, 89, 0.2); }
         
         .container { 
-            background-image: url('lens1.jpg');
+            background-image: url('my-bg.png');
             background-size: cover;
             background-position: center;
             background-color: rgba(17, 11, 26, 0.85); 
@@ -32,7 +30,8 @@
         .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
         .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
         
-        .panel { display: none; padding: 12px 5px; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
+        /* Uniform panel height so all tabs match background sizing */
+        .panel { display: none; height: 380px; padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
         .panel.active { display: flex; }
         
         .button-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
