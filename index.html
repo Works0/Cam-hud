@@ -1,242 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>COREX//SYNC Studio Suite</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;900&display=swap');
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; user-select: none; }
-        
-        html, body { background: transparent !important; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100vh; overflow: hidden; padding-bottom: 20px; }
-        
-        .wrapper { width: 160%; max-width: 940px; position: relative; animation: colorWave 84s infinite ease-in-out; }
-        @keyframes colorWave { 0%, 23.8% { filter: hue-rotate(0deg); } 33.33%, 57.14% { filter: hue-rotate(-30deg); } 66.66%, 90.47% { filter: hue-rotate(-85deg); } 100% { filter: hue-rotate(0deg); } }
-        .wrapper.paused { animation-play-state: paused !important; }
-        
-        .container-border { background: rgba(255, 20, 147, 0.35); padding: 3px; border-radius: 10px; box-shadow: 0 0 25px rgba(255, 20, 147, 0.4), 0 0 50px rgba(179, 0, 89, 0.2); }
-        .container { background: rgba(17, 11, 26, 0.85); border-radius: 7px; position: relative; overflow: hidden; }
-        
-        .tabs { display: flex; height: 90px; background: rgba(10, 6, 16, 0.8); padding: 6px; gap: 14px; border-radius: 7px 7px 0 0; }
-        .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
-        .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
-        
-        .panel { display: none; padding: 12px 5px; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
-        .panel.active { display: flex; }
-        
-        .button-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
-        
-        .btn { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 12px; font-size: 31px; font-weight: bold; color: #d1bceb; cursor: pointer; text-transform: uppercase; transition: all 0.1s; position: relative; z-index: 10; }
-        .btn.active { background: #0e0817; border-color: #ff1493; box-shadow: inset 0px 6px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(255, 20, 147, 0.5); color: #fff; text-shadow: 0 0 10px #ff1493; }
-        .btn.reset { color: #ff1493; }
-        .btn.reset:active { border-color: #ff1493; box-shadow: 0 0 15px #ff1493, inset 0 0 8px #ff1493; color: #fff; }
-        
-        .title { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; }
-        
-        .top-bar { position: absolute; top: -50px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 36px; font-weight: bold; color: #e0e0e0; animation: pulseAura 2.5s infinite alternate ease-in-out; }
-        .logo span { color: #ff1493; animation: pulseCore 2.5s infinite alternate ease-in-out; }
-        
-        @keyframes pulseAura { 0% { text-shadow: 0 0 10px rgba(255,20,147,0.1); } 100% { text-shadow: 0 0 25px rgba(255,20,147,0.9), 0 0 45px rgba(255,20,147,0.6); } }
-        @keyframes pulseCore { 0% { text-shadow: 0 0 10px rgba(255,20,147,0.5); } 100% { text-shadow: 0 0 20px #ff1493, 0 0 40px #ff69b4; } }
-        
-        .ctrl-group { display: flex; gap: 6px; }
-        .ctrl { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; }
-    </style>
+// COREX//SYNC - Logic Router (Full Version - Unlocked)
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const sl_url = urlParams.get('sl_url');
-        const targetName = urlParams.get('target') || "None";
+integer LINK_ORBIT = 777;
+integer LINK_TARGET = 888;
+integer LINK_ROUTER = 700;
 
-        function sendToSL(data) {
-            if (!sl_url) return;
-            let cleanUrl = sl_url;
-            if (!cleanUrl.endsWith('/')) { cleanUrl += '/'; }
-            
-            var beacon = new Image();
-            beacon.src = cleanUrl + '?' + data + '&t=' + Date.now();
+default {
+    state_entry() {
+        // No demo restrictions or timers
+    }
+    
+    link_message(integer sender, integer num, string cmd, key id) {
+        if (num != LINK_ROUTER) return;
+        
+        if (cmd == "DETACH") { 
+            llMessageLinked(LINK_SET, LINK_ORBIT, "STOP_ALL", NULL_KEY); 
+            if (llGetAttached()) llRequestPermissions(llGetOwner(), PERMISSION_ATTACH);
+            return; 
         }
-
-        window.onload = function() {
-            var targetDisplay = document.getElementById('target-display');
-            if (targetDisplay) {
-                targetDisplay.innerText = "Target: " + decodeURIComponent(targetName);
-            }
-            sendToSL('cmd=PAGE_LOADED');
-        };
-
-        function sendCmd(b, cmd) {
-            b.style.transform = 'scale(0.95)';
-            setTimeout(() => { b.style.transform = 'none'; }, 100);
-            
-            if (cmd === 'Pause Color') {
-                var wrap = document.querySelector('.wrapper');
-                wrap.classList.toggle('paused');
-                b.classList.toggle('active');
-                b.innerText = wrap.classList.contains('paused') ? 'PLAY COLOR' : 'PAUSE COLOR';
-            } 
-            else if (cmd.indexOf('Reset') === 0 || cmd === 'Free Cam' || cmd === 'CLEAR_QUEUE') {
-                document.querySelectorAll('.btn.active').forEach(e => e.classList.remove('active'));
-                document.querySelectorAll('.pause-btn').forEach(e => { e.classList.remove('active'); e.innerText = 'PAUSE'; });
-            } 
-            else if (cmd === 'Pause') {
-                document.querySelectorAll('.pause-btn').forEach(e => {
-                    e.classList.toggle('active');
-                    e.innerText = e.classList.contains('active') ? 'PLAY' : 'PAUSE';
-                });
-            } 
-            else if (cmd === 'Toggle Speed' || cmd === 'Zoom Toggle Speed') {
-                var s = 1; var t = b.innerText;
-                if (t.indexOf('1') > -1) s = 2; else if (t.indexOf('2') > -1) s = 3; else if (t.indexOf('3') > -1) s = 4;
-                document.querySelectorAll('.speed-btn').forEach(e => e.innerText = 'SPEED ' + s);
-            } 
-            else if (cmd === 'Toggle Tags') {
-                b.innerText = (b.innerText.toUpperCase() === 'HIDE TAGS') ? 'SHOW TAGS' : 'HIDE TAGS';
-            } 
-            else if (cmd === 'Toggle Chat') {
-                b.innerText = (b.innerText.toUpperCase() === 'MUTE CHAT') ? 'RESTORE CHAT' : 'MUTE CHAT';
-            } 
-            else if (b.classList.contains('orbit-btn')) {
-                document.querySelectorAll('.orbit-btn.active').forEach(e => e.classList.remove('active'));
-                b.classList.add('active');
-                document.querySelectorAll('.pause-btn').forEach(e => { e.classList.remove('active'); e.innerText = 'PAUSE'; });
-            }
-
-            sendToSL('cmd=' + encodeURIComponent(cmd));
-        }
-
-        function setTab(idx) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('t' + idx).classList.add('active');
-            document.getElementById('p' + idx).classList.add('active');
-            sendToSL('nav=' + idx);
-        }
-    </script>
-</head>
-<body>
-    <div class="wrapper">
-        <div class="top-bar">
-            <div class="logo">COREX<span>//</span>SYNC</div>
-            <div class="ctrl-group">
-                <button class="ctrl" onclick="sendCmd(this, 'MINIMIZE')">−</button>
-                <button class="ctrl" style="color:#ff1493;" onclick="sendCmd(this, 'DETACH')">×</button>
-            </div>
-        </div>
         
-        <div class="container-border">
-            <div class="container">
-                <div class="tabs">
-                    <button id="t0" class="tab active" onclick="setTab(0)">Target</button>
-                    <button id="t1" class="tab" onclick="setTab(1)">Quiet</button>
-                    <button id="t2" class="tab" onclick="setTab(2)">Zoom</button>
-                    <button id="t3" class="tab" onclick="setTab(3)">Orbit 1</button>
-                    <button id="t4" class="tab" onclick="setTab(4)">Orbit 2</button>
-                    <button id="t5" class="tab" onclick="setTab(5)">Play</button>
-                    <button id="t6" class="tab" onclick="setTab(6)">Glide</button>
-                </div>
-
-                <!-- TARGET PANEL -->
-                <div id="p0" class="panel active">
-                    <div id="target-display" class="title">Target: None</div>
-                    <div class="button-grid">
-                        <button class="btn" onclick="sendCmd(this, 'Scan Nearby')">Scan Nearby</button>
-                        <button class="btn" onclick="sendCmd(this, 'Scan Objects')">Scan Objects</button>
-                        <button class="btn pause-color-btn" onclick="sendCmd(this, 'Pause Color')">Pause Color</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset Avatar')">Reset Target</button>
-                    </div>
-                </div>
-
-                <!-- QUIET PANEL -->
-                <div id="p1" class="panel">
-                    <div class="button-grid">
-                        <button class="btn" onclick="sendCmd(this, 'Toggle Tags')">Hide Tags</button>
-                        <button class="btn" onclick="sendCmd(this, 'Toggle Chat')">Mute Chat</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Quiet')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- ZOOM PANEL -->
-                <div id="p2" class="panel">
-                    <div class="button-grid">
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Smooth Zoom In')">Toggle Zoom</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Zoom Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Zoom')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- ORBIT 1 PANEL -->
-                <div id="p3" class="panel">
-                    <div class="button-grid">
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Vertical Arc')">Vertical Arc</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Parabolic Arc')">Parabolic Arc</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit-2')">Orbit-2</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly')">Zolly</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly 2')">Zolly 2</button>
-                        <button class="btn pause-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Orbit1')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- ORBIT 2 PANEL -->
-                <div id="p4" class="panel">
-                    <div class="button-grid">
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Helix')">Helix</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Parallax')">Parallax</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Low Parallax')">Low Parallax</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Floor Parallax')">Floor Parallax</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Upward Parallax')">Upward Parallax</button>
-                        <button class="btn pause-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Orbit2')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- PLAYLIST PANEL -->
-                <div id="p5" class="panel">
-                    <div class="title">Director Playlist Queue</div>
-                    <div class="button-grid">
-                        <button class="btn" onclick="sendCmd(this, 'Add_Orbit')">+Orbit</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Crane')">+Crane</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Vertical Arc')">+Vert Arc</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Parabolic Arc')">+Para-Arc</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Orbit-2')">+Orbit-2</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Zolly')">+Zolly</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Zolly 2')">+Zolly 2</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Figure 8-V')">+Fig-8</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Helix')">+Helix</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Parallax')">+Parallax</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Low Parallax')">+Low Para</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Floor Parallax')">+Floor Para</button>
-                        <button class="btn" onclick="sendCmd(this, 'Add_Upward Parallax')">+Upward Para</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'PLAY_QUEUE')">▶ Play Queue</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'CLEAR_QUEUE')">Clear Queue</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Play')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- GLIDE PANEL -->
-                <div id="p6" class="panel">
-                    <div class="title">Multi-Point Waypoints</div>
-                    <div class="button-grid">
-                        <button class="btn reset" onclick="sendCmd(this, 'Free Cam')">Free Cam (Unlock)</button>
-                        <button class="btn" onclick="sendCmd(this, 'Save Waypoint')">+ Save Waypoint</button>
-                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Play Glide')">▶ Play Glide</button>
-                        <button class="btn pause-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Clear Waypoints')">Clear Points</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Glide')">Reset View</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+        if (cmd == "Scan Nearby" || cmd == "Scan Objects" || cmd == "Reset Avatar") { 
+            llMessageLinked(LINK_SET, LINK_TARGET, cmd, NULL_KEY); 
+            return; 
+        }
+        
+        if (cmd == "Toggle Tags") { 
+            string t = (string)id; 
+            if (t == "1") llOwnerSay("@shownametags=n,showmyname=n"); 
+            else llOwnerSay("@shownametags=y,showmyname=y"); 
+            return; 
+        }
+        
+        if (cmd == "Toggle Chat") { 
+            string t = (string)id; 
+            if (t == "1") llOwnerSay("@recvchat=n,recvemote=n"); 
+            else llOwnerSay("@recvchat=y,recvemote=y"); 
+            return; 
+        }
+        
+        if (cmd == "Toggle Speed" || cmd == "Zoom Toggle Speed") { 
+            llMessageLinked(LINK_SET, LINK_ORBIT, "SYNC_SPEED|" + (string)id, NULL_KEY); 
+            return; 
+        }
+        
+        if (cmd != "PAGE_LOADED" && cmd != "MINIMIZE" && cmd != "Pause Color") {
+            llMessageLinked(LINK_SET, LINK_ORBIT, cmd, NULL_KEY);
+        }
+    }
+    
+    run_time_permissions(integer perm) {
+        if (perm & PERMISSION_ATTACH) {
+            llDetachFromAvatar();
+        }
+    }
+}
