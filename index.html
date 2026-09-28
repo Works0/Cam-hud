@@ -8,7 +8,6 @@
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Exo 2', sans-serif; user-select: none; }
         
-        /* Transparent body so the SL Prim Texture shows through instantly */
         body { background: transparent; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100vh; overflow: hidden; padding-bottom: 20px; }
         
         .wrapper { width: 160%; max-width: 940px; position: relative; animation: colorWave 84s infinite ease-in-out; }
@@ -21,6 +20,9 @@
         .tabs { display: flex; height: 90px; background: rgba(10, 6, 16, 0.8); padding: 6px; gap: 14px; border-radius: 7px 7px 0 0; }
         .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
         .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
+        
+        /* Shaded / Locked Tab Styling */
+        .tab.shaded { background: #110816 !important; color: #524266 !important; opacity: 0.5; cursor: not-allowed; }
         
         .panel { display: none; padding: 12px 5px; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
         .panel.active { display: flex; }
@@ -48,7 +50,6 @@
     </style>
 
     <script>
-        // --- URL HANDSHAKE & DYNAMIC TARGETING ---
         const urlParams = new URLSearchParams(window.location.search);
         const sl_url = urlParams.get('sl_url');
         const targetName = urlParams.get('target') || "None";
@@ -61,8 +62,10 @@
         }
 
         window.onload = function() {
-            // Update the Target Name dynamically from the URL parameter
-            document.getElementById('target-display').innerText = "Target: " + decodeURIComponent(targetName);
+            var targetDisplay = document.getElementById('target-display');
+            if (targetDisplay) {
+                targetDisplay.innerText = "Target: " + decodeURIComponent(targetName);
+            }
             sendToSL('cmd=PAGE_LOADED');
         };
 
@@ -70,7 +73,6 @@
             b.style.transform = 'scale(0.95)';
             setTimeout(() => { b.style.transform = 'none'; }, 100);
             
-            // Visual Button Logic
             if (cmd === 'Pause Color') {
                 var wrap = document.querySelector('.wrapper');
                 wrap.classList.toggle('paused');
@@ -92,23 +94,22 @@
                 if (t.indexOf('1') > -1) s = 2; else if (t.indexOf('2') > -1) s = 3; else if (t.indexOf('3') > -1) s = 4;
                 document.querySelectorAll('.speed-btn').forEach(e => e.innerText = 'SPEED ' + s);
             } 
-            else if (cmd === 'Toggle Tags') {
-                b.innerText = (b.innerText.toUpperCase() === 'HIDE TAGS') ? 'SHOW TAGS' : 'HIDE TAGS';
-            } 
-            else if (cmd === 'Toggle Chat') {
-                b.innerText = (b.innerText.toUpperCase() === 'MUTE CHAT') ? 'RESTORE CHAT' : 'MUTE CHAT';
-            } 
             else if (b.classList.contains('orbit-btn')) {
                 document.querySelectorAll('.orbit-btn.active').forEach(e => e.classList.remove('active'));
                 b.classList.add('active');
                 document.querySelectorAll('.pause-btn').forEach(e => { e.classList.remove('active'); e.innerText = 'PAUSE'; });
             }
 
-            // Send command back to Second Life
             sendToSL('cmd=' + encodeURIComponent(cmd));
         }
 
         function setTab(idx) {
+            // Block clicks on shaded/locked demo tabs (Target:0, Quiet:1, Zoom:2, Orbit 2:4, Play:5)
+            var shadedTabs = [0, 1, 2, 4, 5];
+            if (shadedTabs.includes(idx)) {
+                return; 
+            }
+
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById('t' + idx).classList.add('active');
@@ -132,17 +133,17 @@
                 <div class="demo-watermark">DEMO VERSION</div>
                 
                 <div class="tabs">
-                    <button id="t0" class="tab active" onclick="setTab(0)">Target</button>
-                    <button id="t1" class="tab" onclick="setTab(1)">Quiet</button>
-                    <button id="t2" class="tab" onclick="setTab(2)">Zoom</button>
-                    <button id="t3" class="tab" onclick="setTab(3)">Orbit 1</button>
-                    <button id="t4" class="tab" onclick="setTab(4)">Orbit 2</button>
-                    <button id="t5" class="tab" onclick="setTab(5)">Play</button>
+                    <button id="t0" class="tab shaded" onclick="setTab(0)">Target</button>
+                    <button id="t1" class="tab shaded" onclick="setTab(1)">Quiet</button>
+                    <button id="t2" class="tab shaded" onclick="setTab(2)">Zoom</button>
+                    <button id="t3" class="tab active" onclick="setTab(3)">Orbit 1</button>
+                    <button id="t4" class="tab shaded" onclick="setTab(4)">Orbit 2</button>
+                    <button id="t5" class="tab shaded" onclick="setTab(5)">Play</button>
                     <button id="t6" class="tab" onclick="setTab(6)">Glide</button>
                 </div>
 
-                <!-- TARGET PANEL -->
-                <div id="p0" class="panel active">
+                <!-- TARGET PANEL (Shaded/Locked) -->
+                <div id="p0" class="panel">
                     <div id="target-display" class="title">Target: None</div>
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Scan Nearby')">Scan Nearby</button>
@@ -152,7 +153,7 @@
                     </div>
                 </div>
 
-                <!-- QUIET PANEL -->
+                <!-- QUIET PANEL (Shaded/Locked) -->
                 <div id="p1" class="panel">
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Toggle Tags')">Hide Tags</button>
@@ -161,7 +162,7 @@
                     </div>
                 </div>
 
-                <!-- ZOOM PANEL -->
+                <!-- ZOOM PANEL (Shaded/Locked) -->
                 <div id="p2" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Smooth Zoom In')">Toggle Zoom</button>
@@ -170,8 +171,8 @@
                     </div>
                 </div>
 
-                <!-- ORBIT 1 PANEL -->
-                <div id="p3" class="panel">
+                <!-- ORBIT 1 PANEL (UNLOCKED / ACTIVE BY DEFAULT) -->
+                <div id="p3" class="panel active">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
@@ -186,7 +187,7 @@
                     </div>
                 </div>
 
-                <!-- ORBIT 2 PANEL -->
+                <!-- ORBIT 2 PANEL (Shaded/Locked) -->
                 <div id="p4" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
@@ -201,7 +202,7 @@
                     </div>
                 </div>
 
-                <!-- PLAYLIST PANEL -->
+                <!-- PLAYLIST PANEL (Shaded/Locked) -->
                 <div id="p5" class="panel">
                     <div class="title">Director Playlist Queue</div>
                     <div class="button-grid">
@@ -225,7 +226,7 @@
                     </div>
                 </div>
 
-                <!-- GLIDE PANEL -->
+                <!-- GLIDE PANEL (UNLOCKED) -->
                 <div id="p6" class="panel">
                     <div class="title">Multi-Point Waypoints</div>
                     <div class="button-grid">
