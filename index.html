@@ -33,9 +33,9 @@
         
         .tabs { display: flex; height: 90px; background: rgba(10, 6, 16, 0.8); padding: 6px; gap: 14px; border-radius: 7px 7px 0 0; }
         
-        /* TABS: Background changes with the HUD. Text is grey/white so it never changes color. */
-        .tab { flex: 1; background: rgba(255, 20, 147, 0.15); color: #cccccc; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid rgba(255, 20, 147, 0.3); transition: all 0.15s; }
-        .tab.active { background: rgba(255, 20, 147, 0.5); color: #ffffff; border-color: #ff1493; box-shadow: 0 0 15px rgba(255, 20, 147, 0.6), inset 0 0 10px rgba(255, 20, 147, 0.4); }
+        /* TABS: Original text colors preserved, only the background shifts with the HUD colors */
+        .tab { flex: 1; background: rgba(255, 20, 147, 0.15); color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid rgba(255, 20, 147, 0.3); transition: all 0.15s; }
+        .tab.active { background: rgba(255, 20, 147, 0.5); color: #fff; border-color: #ff1493; box-shadow: 0 0 15px rgba(255, 20, 147, 0.6), inset 0 0 10px rgba(255, 20, 147, 0.4); }
         
         /* Added overflow-y: auto; so panels with lots of buttons scroll */
         .panel { display: none; height: calc(100% - 90px); padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; overflow-y: auto; }
@@ -43,12 +43,14 @@
         
         .button-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
         
-        .btn { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 12px; font-size: 31px; font-weight: bold; color: #d1bceb; cursor: pointer; text-transform: uppercase; transition: all 0.1s; position: relative; z-index: 10; }
-        .btn.active { background: #0e0817; border-color: #ff1493; box-shadow: inset 0px 6px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(255, 20, 147, 0.5); color: #fff; text-shadow: 0 0 10px #ff1493; }
+        /* BUTTONS: Background is now partially transparent (0.65 opacity) so the lens shows through */
+        .btn { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 11px 12px; font-size: 31px; font-weight: bold; color: #d1bceb; cursor: pointer; text-transform: uppercase; transition: all 0.1s; position: relative; z-index: 10; }
+        .btn.active { background: rgba(14, 8, 23, 0.85); border-color: #ff1493; box-shadow: inset 0px 6px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(255, 20, 147, 0.5); color: #fff; text-shadow: 0 0 10px #ff1493; }
         .btn.reset { color: #ff1493; }
         .btn.reset:active { border-color: #ff1493; box-shadow: 0 0 15px #ff1493, inset 0 0 8px #ff1493; color: #fff; }
         
-        .title { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; margin-bottom: 40px; flex-shrink: 0; }
+        /* TITLE: Also updated to match the slightly transparent look */
+        .title { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; margin-bottom: 40px; flex-shrink: 0; }
         
         .top-bar { position: absolute; top: -50px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 36px; font-weight: bold; color: #e0e0e0; animation: pulseAura 2.5s infinite alternate ease-in-out; }
@@ -58,7 +60,8 @@
         @keyframes pulseCore { 0% { text-shadow: 0 0 10px rgba(255,20,147,0.5); } 100% { text-shadow: 0 0 20px #ff1493, 0 0 40px #ff69b4; } }
         
         .ctrl-group { display: flex; gap: 6px; }
-        .ctrl { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; }
+        /* CTRL BUTTONS (-/x): Also updated to be slightly transparent */
+        .ctrl { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; }
         
         /* Custom scrollbar for panels with lots of buttons */
         .panel::-webkit-scrollbar { width: 8px; }
