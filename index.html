@@ -106,29 +106,75 @@
                 }
             }
             
-            // Restore the color pause state after a page reload
-            const colorPaused = urlParams.get('cp');
-            if (colorPaused === '1') {
-                document.querySelector('.wrapper').classList.add('paused');
+            // Initialize Color Memory
+            initColorMemory();
+            
+            sendToSL('cmd=PAGE_LOADED');
+        };
+
+        // --- NEW COLOR MEMORY SYSTEM ---
+        function initColorMemory() {
+            let isColorPaused = localStorage.getItem('corex_color_paused') === 'true';
+            let animOffset = parseFloat(localStorage.getItem('corex_anim_offset')) || 0;
+            let lastTime = parseInt(localStorage.getItem('corex_last_time')) || Date.now();
+
+            if (!isColorPaused) {
+                let elapsed = (Date.now() - lastTime) / 1000;
+                animOffset = (animOffset + elapsed) % 84;
+            }
+
+            localStorage.setItem('corex_last_time', Date.now());
+            localStorage.setItem('corex_anim_offset', animOffset);
+
+            let wrap = document.querySelector('.wrapper');
+            // Apply the negative delay to instantly fast-forward the animation to the saved time
+            wrap.style.animationDelay = `-${animOffset}s`;
+            
+            if (isColorPaused) {
+                wrap.classList.add('paused');
                 var cBtn = document.querySelector('.pause-color-btn');
                 if(cBtn) {
                     cBtn.classList.add('active');
                     cBtn.innerText = 'PLAY COLOR';
                 }
             }
+
+            // Save the exact animation time when the page closes, or periodically just in case
+            window.addEventListener('beforeunload', saveColorState);
+            setInterval(saveColorState, 2000);
+        }
+
+        function saveColorState() {
+            let wrap = document.querySelector('.wrapper');
+            if (!wrap) return;
+            let isColorPaused = wrap.classList.contains('paused');
+            let lastTime = parseInt(localStorage.getItem('corex_last_time')) || Date.now();
+            let animOffset = parseFloat(localStorage.getItem('corex_anim_offset')) || 0;
             
-            sendToSL('cmd=PAGE_LOADED');
-        };
+            if (!isColorPaused) {
+                let elapsed = (Date.now() - lastTime) / 1000;
+                animOffset = (animOffset + elapsed) % 84;
+            }
+            
+            localStorage.setItem('corex_color_paused', isColorPaused);
+            localStorage.setItem('corex_anim_offset', animOffset);
+            localStorage.setItem('corex_last_time', Date.now());
+        }
+        // -------------------------------
 
         function sendCmd(b, cmd) {
             b.style.transform = 'scale(0.95)';
             setTimeout(() => { b.style.transform = 'none'; }, 100);
+            
+            // Save the exact color timeline spot the millisecond before a button is clicked
+            saveColorState(); 
             
             if (cmd === 'Pause Color') {
                 var wrap = document.querySelector('.wrapper');
                 wrap.classList.toggle('paused');
                 b.classList.toggle('active');
                 b.innerText = wrap.classList.contains('paused') ? 'PLAY COLOR' : 'PAUSE COLOR';
+                localStorage.setItem('corex_last_time', Date.now());
             } 
             else if (cmd.indexOf('Reset') === 0 || cmd === 'Free Cam' || cmd === 'CLEAR_QUEUE') {
                 document.querySelectorAll('.btn.active').forEach(e => e.classList.remove('active'));
