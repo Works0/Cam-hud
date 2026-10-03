@@ -43,13 +43,13 @@
         
         .button-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
         
-        /* BUTTONS: Brightened base text color and added a heavy dark text-shadow for readability over transparency */
+        /* BUTTONS: Background is now partially transparent with heavy drop-shadows on text */
         .btn { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 11px 12px; font-size: 31px; font-weight: bold; color: #e8dcf5; cursor: pointer; text-transform: uppercase; transition: all 0.1s; position: relative; z-index: 10; text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0px 0px 4px rgba(0,0,0,0.8); }
         .btn.active { background: rgba(14, 8, 23, 0.85); border-color: #ff1493; box-shadow: inset 0px 6px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(255, 20, 147, 0.5); color: #fff; text-shadow: 0 0 10px #ff1493, 2px 2px 4px rgba(0,0,0,0.9); }
         .btn.reset { color: #ff1493; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0px 0px 3px rgba(0,0,0,0.7); }
         .btn.reset:active { border-color: #ff1493; box-shadow: 0 0 15px #ff1493, inset 0 0 8px #ff1493; color: #fff; }
         
-        /* TITLE: Added text-shadow for readability */
+        /* TITLE */
         .title { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; margin-bottom: 40px; flex-shrink: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); }
         
         .top-bar { position: absolute; top: -50px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; }
@@ -62,7 +62,7 @@
         .ctrl-group { display: flex; gap: 6px; }
         .ctrl { background: rgba(17, 10, 31, 0.65); border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); }
         
-        /* Custom scrollbar for panels with lots of buttons */
+        /* Custom scrollbar */
         .panel::-webkit-scrollbar { width: 8px; }
         .panel::-webkit-scrollbar-track { background: rgba(10, 6, 16, 0.5); border-radius: 4px; }
         .panel::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 4px; }
@@ -103,6 +103,17 @@
                 if (tabToActivate && panelToActivate) {
                     tabToActivate.classList.add('active');
                     panelToActivate.classList.add('active');
+                }
+            }
+            
+            // Restore the color pause state after a page reload
+            const colorPaused = urlParams.get('cp');
+            if (colorPaused === '1') {
+                document.querySelector('.wrapper').classList.add('paused');
+                var cBtn = document.querySelector('.pause-color-btn');
+                if(cBtn) {
+                    cBtn.classList.add('active');
+                    cBtn.innerText = 'PLAY COLOR';
                 }
             }
             
