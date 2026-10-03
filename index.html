@@ -35,7 +35,7 @@
         .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
         .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
         
-        /* Added overflow-y: auto; so panels with lots of buttons scroll instead of pushing the title up */
+        /* Added overflow-y: auto; so panels with lots of buttons scroll */
         .panel { display: none; height: calc(100% - 90px); padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; overflow-y: auto; }
         .panel.active { display: flex; }
         
@@ -63,8 +63,8 @@
         .panel::-webkit-scrollbar-track { background: rgba(10, 6, 16, 0.5); border-radius: 4px; }
         .panel::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 4px; }
 
-        /* Fixes the scroll clipping specifically for the Play menu */
-        #p5 { justify-content: flex-start; padding-top: 20px; padding-bottom: 30px; }
+        /* Fixes the scroll clipping specifically for the Orbit and Play menus */
+        #p3, #p4 { justify-content: flex-start; padding-top: 20px; padding-bottom: 30px; }
     </style>
 
     <script>
@@ -170,13 +170,12 @@
                     <button id="t0" class="tab active" onclick="setTab(0)">Target</button>
                     <button id="t1" class="tab" onclick="setTab(1)">Quiet</button>
                     <button id="t2" class="tab" onclick="setTab(2)">Zoom</button>
-                    <button id="t3" class="tab" onclick="setTab(3)">Orbit 1</button>
-                    <button id="t4" class="tab" onclick="setTab(4)">Orbit 2</button>
-                    <button id="t5" class="tab" onclick="setTab(5)">Play</button>
-                    <button id="t6" class="tab" onclick="setTab(6)">Glide</button>
+                    <button id="t3" class="tab" onclick="setTab(3)">Orbit</button>
+                    <button id="t4" class="tab" onclick="setTab(4)">Play</button>
+                    <button id="t5" class="tab" onclick="setTab(5)">Glide</button>
                 </div>
 
-                <!-- TARGET PANEL -->
+                <!-- TARGET PANEL (#p0) -->
                 <div id="p0" class="panel active">
                     <div id="target-display" class="title">Target: None</div>
                     <div class="button-grid">
@@ -187,7 +186,7 @@
                     </div>
                 </div>
 
-                <!-- QUIET PANEL -->
+                <!-- QUIET PANEL (#p1) -->
                 <div id="p1" class="panel">
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Toggle Tags')">Hide Tags</button>
@@ -196,7 +195,7 @@
                     </div>
                 </div>
 
-                <!-- ZOOM PANEL -->
+                <!-- ZOOM PANEL (#p2) -->
                 <div id="p2" class="panel">
                     <div class="button-grid">
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Smooth Zoom In')">Toggle Zoom</button>
@@ -205,9 +204,10 @@
                     </div>
                 </div>
 
-                <!-- ORBIT 1 PANEL -->
+                <!-- COMBINED ORBIT PANEL (#p3) -->
                 <div id="p3" class="panel">
                     <div class="button-grid">
+                        <!-- Orbit 1 Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Vertical Arc')">Vertical Arc</button>
@@ -215,30 +215,24 @@
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit-2')">Orbit-2</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly')">Zolly</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly 2')">Zolly 2</button>
-                        <button class="btn pause-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
-                        <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Orbit1')">Reset View</button>
-                    </div>
-                </div>
-
-                <!-- ORBIT 2 PANEL -->
-                <div id="p4" class="panel">
-                    <div class="button-grid">
+                        <!-- Orbit 2 Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Helix')">Helix</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Parallax')">Parallax</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Low Parallax')">Low Parallax</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Floor Parallax')">Floor Parallax</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Upward Parallax')">Upward Parallax</button>
+                        
+                        <!-- Combined Controls -->
                         <button class="btn pause-btn" onclick="sendCmd(this, 'Pause')">Pause</button>
                         <button class="btn speed-btn" onclick="sendCmd(this, 'Toggle Speed')">Speed 1</button>
-                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Orbit2')">Reset View</button>
+                        <button class="btn reset" onclick="sendCmd(this, 'Reset_Orbit')">Reset View</button>
                     </div>
                 </div>
 
-                <!-- PLAYLIST PANEL -->
-                <div id="p5" class="panel">
-                    <div class="title">Director Playlist Queue</div>
+                <!-- PLAYLIST PANEL (#p4) -->
+                <div id="p4" class="panel">
+                    <div class="title" style="margin-bottom: 15px; margin-top: 10px;">Director Playlist Queue</div>
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Add_Orbit')">+Orbit</button>
                         <button class="btn" onclick="sendCmd(this, 'Add_Crane')">+Crane</button>
@@ -260,8 +254,8 @@
                     </div>
                 </div>
 
-                <!-- GLIDE PANEL -->
-                <div id="p6" class="panel">
+                <!-- GLIDE PANEL (#p5) -->
+                <div id="p5" class="panel">
                     <div class="title">Multi-Point Waypoints</div>
                     <div class="button-grid">
                         <button class="btn reset" onclick="sendCmd(this, 'Free Cam')">Free Cam (Unlock)</button>
