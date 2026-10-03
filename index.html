@@ -35,8 +35,8 @@
         .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
         .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
         
-        /* Panel height updated to dynamically fill remaining space */
-        .panel { display: none; height: calc(100% - 90px); padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; }
+        /* Added overflow-y: auto; so panels with lots of buttons scroll instead of pushing the title up */
+        .panel { display: none; height: calc(100% - 90px); padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; overflow-y: auto; }
         .panel.active { display: flex; }
         
         .button-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
@@ -46,8 +46,7 @@
         .btn.reset { color: #ff1493; }
         .btn.reset:active { border-color: #ff1493; box-shadow: 0 0 15px #ff1493, inset 0 0 8px #ff1493; color: #fff; }
         
-        /* Title pushed higher with margin-bottom */
-        .title { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; margin-bottom: 70px; }
+        .title { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 11px 25px; font-size: 34px; font-weight: bold; display: inline-block; text-align: center; color: #ff1493; position: relative; z-index: 10; margin-bottom: 40px; flex-shrink: 0; }
         
         .top-bar { position: absolute; top: -50px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 36px; font-weight: bold; color: #e0e0e0; animation: pulseAura 2.5s infinite alternate ease-in-out; }
@@ -58,6 +57,11 @@
         
         .ctrl-group { display: flex; gap: 6px; }
         .ctrl { background: #110a1f; border: 2px solid #321e54; border-radius: 4px; padding: 6px 16px; font-size: 26px; font-weight: bold; color: #d1bceb; cursor: pointer; position: relative; z-index: 10; }
+        
+        /* Custom scrollbar for panels with lots of buttons */
+        .panel::-webkit-scrollbar { width: 8px; }
+        .panel::-webkit-scrollbar-track { background: rgba(10, 6, 16, 0.5); border-radius: 4px; }
+        .panel::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 4px; }
     </style>
 
     <script>
@@ -215,7 +219,8 @@
 
                 <!-- PLAYLIST PANEL -->
                 <div id="p5" class="panel">
-                    <div class="title">Director Playlist Queue</div>
+                    <!-- Adjusted margins explicitly for this panel so it sits perfectly -->
+                    <div class="title" style="margin-bottom: 15px; margin-top: 10px;">Director Playlist Queue</div>
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Add_Orbit')">+Orbit</button>
                         <button class="btn" onclick="sendCmd(this, 'Add_Crane')">+Crane</button>
