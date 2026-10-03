@@ -32,8 +32,10 @@
         }
         
         .tabs { display: flex; height: 90px; background: rgba(10, 6, 16, 0.8); padding: 6px; gap: 14px; border-radius: 7px 7px 0 0; }
-        .tab { flex: 1; background: #181026; color: #a28fb8; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
-        .tab.active { background: #231438; color: #fff; border-color: rgba(255, 20, 147, 0.35); box-shadow: 0 0 15px rgba(255, 20, 147, 0.4), inset 0 0 8px rgba(255, 20, 147, 0.2); }
+        
+        /* TABS: Background changes with the HUD. Text is grey/white so it never changes color. */
+        .tab { flex: 1; background: rgba(255, 20, 147, 0.15); color: #cccccc; font-size: 31px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid rgba(255, 20, 147, 0.3); transition: all 0.15s; }
+        .tab.active { background: rgba(255, 20, 147, 0.5); color: #ffffff; border-color: #ff1493; box-shadow: 0 0 15px rgba(255, 20, 147, 0.6), inset 0 0 10px rgba(255, 20, 147, 0.4); }
         
         /* Added overflow-y: auto; so panels with lots of buttons scroll */
         .panel { display: none; height: calc(100% - 90px); padding: 12px 5px; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 0 0 7px 7px; overflow-y: auto; }
@@ -207,7 +209,7 @@
                 <!-- COMBINED ORBIT PANEL (#p3) -->
                 <div id="p3" class="panel">
                     <div class="button-grid">
-                        <!-- Orbit 1 Moves -->
+                        <!-- Orbit Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Vertical Arc')">Vertical Arc</button>
@@ -215,7 +217,6 @@
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit-2')">Orbit-2</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly')">Zolly</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly 2')">Zolly 2</button>
-                        <!-- Orbit 2 Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Helix')">Helix</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Parallax')">Parallax</button>
