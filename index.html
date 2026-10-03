@@ -179,6 +179,7 @@
                 <div id="p0" class="panel active">
                     <div id="target-display" class="title">Target: None</div>
                     <div class="button-grid">
+                        <button class="btn orbit-btn" onclick="sendCmd(this, 'Aim_Select')">Aim & Select</button>
                         <button class="btn" onclick="sendCmd(this, 'Scan Nearby')">Scan Nearby</button>
                         <button class="btn" onclick="sendCmd(this, 'Scan Objects')">Scan Objects</button>
                         <button class="btn pause-color-btn" onclick="sendCmd(this, 'Pause Color')">Pause Color</button>
@@ -207,7 +208,7 @@
                 <!-- COMBINED ORBIT PANEL (#p3) -->
                 <div id="p3" class="panel">
                     <div class="button-grid">
-                        <!-- Orbit 1 Moves -->
+                        <!-- Orbit Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit')">Orbit</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Crane')">Crane</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Vertical Arc')">Vertical Arc</button>
@@ -215,7 +216,6 @@
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Orbit-2')">Orbit-2</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly')">Zolly</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Zolly 2')">Zolly 2</button>
-                        <!-- Orbit 2 Moves -->
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Figure 8-V')">Figure 8-V</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Helix')">Helix</button>
                         <button class="btn orbit-btn" onclick="sendCmd(this, 'Parallax')">Parallax</button>
