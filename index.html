@@ -86,6 +86,22 @@
             if (targetDisplay) {
                 targetDisplay.innerText = "Target: " + decodeURIComponent(targetName);
             }
+            
+            // Restore the active tab after a page reload
+            const activeNav = urlParams.get('nav');
+            if (activeNav !== null) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                
+                var tabToActivate = document.getElementById('t' + activeNav);
+                var panelToActivate = document.getElementById('p' + activeNav);
+                
+                if (tabToActivate && panelToActivate) {
+                    tabToActivate.classList.add('active');
+                    panelToActivate.classList.add('active');
+                }
+            }
+            
             sendToSL('cmd=PAGE_LOADED');
         };
 
