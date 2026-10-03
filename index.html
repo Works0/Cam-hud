@@ -62,6 +62,9 @@
         .panel::-webkit-scrollbar { width: 8px; }
         .panel::-webkit-scrollbar-track { background: rgba(10, 6, 16, 0.5); border-radius: 4px; }
         .panel::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 4px; }
+
+        /* Fixes the scroll clipping specifically for the Play menu */
+        #p5 { justify-content: flex-start; padding-top: 20px; padding-bottom: 30px; }
     </style>
 
     <script>
@@ -219,8 +222,7 @@
 
                 <!-- PLAYLIST PANEL -->
                 <div id="p5" class="panel">
-                    <!-- Adjusted margins explicitly for this panel so it sits perfectly -->
-                    <div class="title" style="margin-bottom: 15px; margin-top: 10px;">Director Playlist Queue</div>
+                    <div class="title">Director Playlist Queue</div>
                     <div class="button-grid">
                         <button class="btn" onclick="sendCmd(this, 'Add_Orbit')">+Orbit</button>
                         <button class="btn" onclick="sendCmd(this, 'Add_Crane')">+Crane</button>
